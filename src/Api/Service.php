@@ -37,7 +37,6 @@ class Service
         add_filter('rest_prepare_services', [$this, 'restPrepareServices'], 10, 3);
     }
 
-
     /**
      * @param WP_Query $query
      *
@@ -86,8 +85,12 @@ class Service
      */
     public function restRequestAfterCallbacks($response, $handler, \WP_REST_Request $request)
     {
+        if (!isset($response->data)) {
+            return $response;
+        }
+
         foreach ($response->data as $key => $value) {
-            if (isset($value['title'])) {
+            if (isset($value['title']['rendered'])) {
                 $value['title'] = $value['title']['rendered'];
             }
 
